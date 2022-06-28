@@ -1,6 +1,6 @@
 {
-    "name": "movies_app",
-    "short_name": "movies_app",
+    "name": "blank",
+    "short_name": "blank",
     "start_url": ".",
     "display": "standalone",
     "background_color": "#0175C2",
