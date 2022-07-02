@@ -1,12 +1,22 @@
+import 'dart:convert';
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
 
 class MoviesProvider extends ChangeNotifier {
+  String _baseURL = 'api.themoviedb.org';
+  String _apiKey = '36c66b8cb25a6c605c4d6804ce27f452';
+  String _lang = 'es-ES';
+
   MoviesProvider() {
     print('MoviesProvider inicializado');
     this.getOnDisplayMovies();
   }
 
   getOnDisplayMovies() async {
-    print('getOnDisplayMovies');
+    var url = Uri.https(_baseURL, '3/movie/now_playing',
+        {'api_key': _apiKey, 'language': _lang, 'page': '1'});
+    final response = await http.get(url);
+    final Map<String, dynamic> decodedData = json.decode(response.body);
+    print(decodedData);
   }
 }
