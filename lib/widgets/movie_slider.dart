@@ -20,17 +20,26 @@ class MovieSlider extends StatelessWidget {
           child: ListView.builder( // error en tamaño, xq widget padre es flexible
               scrollDirection: Axis.horizontal,
               itemCount: 20,
-              itemBuilder: (_, int index) {
-                return Container(
-                  width: 130,
-                  height: 190,
-                  color: Colors.green,
-                  margin: EdgeInsets.symmetric(horizontal: 10, vertical: 10),
-                );
-              }),
+              itemBuilder: (_, int index) => const _MoviePoster()
+            ),
         )
       ]),
     );
   }
 }
 
+class _MoviePoster extends StatelessWidget {
+  const _MoviePoster({
+    Key? key,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      width: 130,
+      height: 190,
+      color: Colors.green,
+      margin: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+    );
+  }
+}
