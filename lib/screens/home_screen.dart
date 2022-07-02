@@ -12,7 +12,7 @@ class HomeScreen extends StatelessWidget {
         actions: [
           IconButton(
             onPressed: () {}, 
-            icon: Icon(Icons.search))
+            icon: const Icon(Icons.search))
         ],
       ),
       body: SingleChildScrollView( // para hacer scroll y ver los widgets q no entran en pantalla
