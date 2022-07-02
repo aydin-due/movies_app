@@ -15,10 +15,15 @@ class HomeScreen extends StatelessWidget {
             icon: Icon(Icons.search))
         ],
       ),
-      body: Column(
-        children: [
-          CardSwiper()
-        ],)
+      body: SingleChildScrollView( // para hacer scroll y ver los widgets q no entran en pantalla
+        child: Column(
+          children: const [
+            //main cards
+            CardSwiper(),
+            //movie cards
+            MovieSlider(),
+          ],),
+      )
     );
   }
 }
