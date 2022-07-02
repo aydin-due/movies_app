@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:movies_app/models/models.dart';
 
 class MoviesProvider extends ChangeNotifier {
   String _baseURL = 'api.themoviedb.org';
@@ -16,7 +17,7 @@ class MoviesProvider extends ChangeNotifier {
     var url = Uri.https(_baseURL, '3/movie/now_playing',
         {'api_key': _apiKey, 'language': _lang, 'page': '1'});
     final response = await http.get(url);
-    final Map<String, dynamic> decodedData = json.decode(response.body);
-    print(decodedData);
+    final nowPlayingResponse = NowPlayingResponse.fromJson(response.body);
+    print(nowPlayingResponse.results[0].title);
   }
 }
