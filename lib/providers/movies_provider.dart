@@ -8,6 +8,8 @@ class MoviesProvider extends ChangeNotifier {
   String _apiKey = '36c66b8cb25a6c605c4d6804ce27f452';
   String _lang = 'es-ES';
 
+  List<Movie> onDisplayMovies = [];
+
   MoviesProvider() {
     print('MoviesProvider inicializado');
     this.getOnDisplayMovies();
@@ -18,6 +20,8 @@ class MoviesProvider extends ChangeNotifier {
         {'api_key': _apiKey, 'language': _lang, 'page': '1'});
     final response = await http.get(url);
     final nowPlayingResponse = NowPlayingResponse.fromJson(response.body);
-    print(nowPlayingResponse.results[0].title);
+    // print(nowPlayingResponse.results[0].title);
+    onDisplayMovies = nowPlayingResponse.results;
+    notifyListeners(); //notifica a los widgets q se redibujen cuando hay cambios
   }
 }
