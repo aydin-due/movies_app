@@ -2,12 +2,32 @@ import 'package:flutter/material.dart';
 
 import '../models/models.dart';
 
-class MovieSlider extends StatelessWidget {
-  const MovieSlider({Key? key, required this.movies, this.title})
+class MovieSlider extends StatefulWidget {
+  const MovieSlider(
+      {Key? key, required this.movies, this.title, required this.onNextPage})
       : super(key: key);
 
   final List<Movie> movies;
   final String? title;
+  final Function onNextPage;
+
+  @override
+  State<MovieSlider> createState() => _MovieSliderState();
+}
+
+class _MovieSliderState extends State<MovieSlider> {
+  final ScrollController scrollController = ScrollController();
+
+  @override
+  void initState() {
+    super.initState();
+    scrollController.addListener(() {
+      if (scrollController.position.pixels >=
+          scrollController.position.maxScrollExtent - 500) {
+        widget.onNextPage();
+      }
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -15,11 +35,11 @@ class MovieSlider extends StatelessWidget {
       width: double.infinity,
       height: 260,
       child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-        if (title != null)
+        if (widget.title != null)
           Padding(
               padding: const EdgeInsets.symmetric(horizontal: 20),
               child: Text(
-                title!,
+                widget.title!,
                 style:
                     const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
               )),
@@ -30,9 +50,11 @@ class MovieSlider extends StatelessWidget {
           // soluciona error d tamaño, widget p/ abarcar todo el espacio disponible
           child: ListView.builder(
               // error en tamaño, xq widget padre es flexible
+              controller: scrollController,
               scrollDirection: Axis.horizontal,
-              itemCount: movies.length,
-              itemBuilder: (_, int index) =>  _MoviePoster(movie: movies[index])),
+              itemCount: widget.movies.length,
+              itemBuilder: (_, int index) =>
+                  _MoviePoster(movie: widget.movies[index])),
         )
       ]),
     );
@@ -41,7 +63,8 @@ class MovieSlider extends StatelessWidget {
 
 class _MoviePoster extends StatelessWidget {
   const _MoviePoster({
-    Key? key, required this.movie,
+    Key? key,
+    required this.movie,
   }) : super(key: key);
   final Movie movie;
 
@@ -71,8 +94,7 @@ class _MoviePoster extends StatelessWidget {
         ),
         Text(
           movie.title,
-          overflow: TextOverflow
-              .ellipsis, // muestra 3 puntitos p/ indicar q hay + texto
+          overflow: TextOverflow.ellipsis, // muestra 3 puntitos p/ indicar q hay + texto
           maxLines: 2, // num d lineas q hay
           textAlign: TextAlign.center,
         )
