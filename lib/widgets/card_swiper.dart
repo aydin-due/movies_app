@@ -34,8 +34,7 @@ class CardSwiper extends StatelessWidget {
             // builder dispara una funcion dinamicamente
             return GestureDetector(
               onTap: () => Navigator.pushNamed(context, 'details',
-                  arguments:
-                      'movie-instance'), //navega cuando se da click en card
+                  arguments: movie), //navega cuando se da click en card
               child: ClipRRect(
                 // card builder
                 borderRadius: BorderRadius.circular(20),

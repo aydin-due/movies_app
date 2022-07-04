@@ -1,33 +1,41 @@
 import 'package:flutter/material.dart';
+import 'package:movies_app/models/models.dart';
 import 'package:movies_app/widgets/widgets.dart';
 
 class DetailsScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    final String movie =
-        ModalRoute.of(context)?.settings.arguments.toString() ??
-            'no-movie'; //argumentos pasados en la nav
+    final Movie movie = ModalRoute.of(context)!.settings.arguments
+        as Movie; //argumentos pasados en la nav
+    // print(movie.title);
     return Scaffold(
         body: CustomScrollView(
       slivers: [
         //solo se pueden poner widgets hederados de fam sliver
-        _CustomAppBar(),
+        _CustomAppBar(
+          movie: movie,
+        ),
 
         SliverList(
-          delegate: SliverChildListDelegate([
-            const _PosterAndTitle(),
-            _Overview(),
-            _Overview(),
-            _Overview(),
-            CastingCards()
-            ]
-          )),
+            delegate: SliverChildListDelegate([
+          _PosterAndTitle(
+            movie: movie,
+          ),
+          _Overview(
+            movie: movie,
+          ),
+          CastingCards()
+        ])),
       ],
     ));
   }
 }
 
 class _CustomAppBar extends StatelessWidget {
+  const _CustomAppBar({super.key, required this.movie});
+
+  final Movie movie;
+
   @override
   Widget build(BuildContext context) {
     return SliverAppBar(
@@ -41,15 +49,16 @@ class _CustomAppBar extends StatelessWidget {
         title: Container(
             width: double.infinity,
             alignment: Alignment.bottomCenter,
-            padding: EdgeInsets.only(bottom: 10),
+            padding: EdgeInsets.only(bottom: 10, left: 10, right: 10),
             color: Colors.black12,
-            child: const Text(
-              'movie.title',
+            child: Text(
+              movie.title,
               style: TextStyle(fontSize: 16),
+              textAlign: TextAlign.center,
             )),
-        background: const FadeInImage(
-            placeholder: AssetImage('assets/loading.gif'),
-            image: NetworkImage('https://via.placeholder.com/500x300'),
+        background: FadeInImage(
+            placeholder: const AssetImage('assets/loading.gif'),
+            image: NetworkImage(movie.backdropImage),
             fit: BoxFit.cover),
       ),
     );
@@ -57,11 +66,14 @@ class _CustomAppBar extends StatelessWidget {
 }
 
 class _PosterAndTitle extends StatelessWidget {
-  const _PosterAndTitle({Key? key}) : super(key: key);
+  const _PosterAndTitle({Key? key, required this.movie}) : super(key: key);
+
+  final Movie movie;
 
   @override
   Widget build(BuildContext context) {
     final TextTheme textTheme = Theme.of(context).textTheme;
+    final size = MediaQuery.of(context).size;
 
     return Container(
       margin: const EdgeInsets.only(top: 20),
@@ -69,47 +81,51 @@ class _PosterAndTitle extends StatelessWidget {
       child: Row(children: [
         ClipRRect(
           borderRadius: BorderRadius.circular(20),
-          child: const FadeInImage(
-            placeholder: AssetImage('assets/no-image.jpg'),
-            image: NetworkImage('https://via.placeholder.com/200x300'),
+          child: FadeInImage(
+            placeholder: const AssetImage('assets/no-image.jpg'),
+            image: NetworkImage(movie.posterImage),
             height: 150,
+            width: 110,
           ),
         ),
         const SizedBox(
           width: 20,
         ),
-        Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              'movie.title',
-              style: textTheme.headline5,
-              overflow: TextOverflow.ellipsis,
-              maxLines: 2,
-            ),
-            Text(
-              'movie.originalTitle',
-              style: textTheme.subtitle1,
-              overflow: TextOverflow.ellipsis,
-              maxLines: 2,
-            ),
-            Row(
-              children: [
-                const Icon(
-                  Icons.start,
-                  size: 15,
-                  color: Colors.grey,
-                ),
-                const SizedBox(
-                  width: 5,
-                ),
-                Text(
-                  'movie.voteAverage',
-                  style: textTheme.caption,
-                )
-              ],
-            )
-          ],
+        ConstrainedBox(
+          constraints: BoxConstraints(maxWidth: size.width-190),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                movie.title,
+                style: textTheme.headline5,
+                overflow: TextOverflow.ellipsis,
+                maxLines: 2,
+              ),
+              Text(
+                movie.originalTitle,
+                style: textTheme.subtitle1,
+                overflow: TextOverflow.ellipsis,
+                maxLines: 2,
+              ),
+              Row(
+                children: [
+                  const Icon(
+                    Icons.start,
+                    size: 15,
+                    color: Colors.grey,
+                  ),
+                  const SizedBox(
+                    width: 5,
+                  ),
+                  Text(
+                    '${movie.voteAverage}',
+                    style: textTheme.caption,
+                  )
+                ],
+              )
+            ],
+          ),
         )
       ]),
     );
@@ -117,17 +133,19 @@ class _PosterAndTitle extends StatelessWidget {
 }
 
 class _Overview extends StatelessWidget {
+  const _Overview({super.key, required this.movie});
+
+  final Movie movie;
+
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: EdgeInsets.symmetric(horizontal: 30, vertical: 10),
+      padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 10),
       child: Text(
-        'Eu eiusmod est incididunt aliqua excepteur sit. Eu nostrud magna cillum excepteur magna consequat aute deserunt do ut fugiat in aliqua tempor. Proident nisi minim cillum excepteur anim ut aliquip proident laboris dolor aute. Cillum ullamco elit in reprehenderit laboris laborum. Sit reprehenderit id commodo in proident ex cillum non nulla anim id esse eu aliqua. Eu fugiat aliquip in id eiusmod dolore aute ex consequat consectetur irure eu duis ex. Id aute quis est mollit cillum ipsum ullamco incididunt nulla consequat.',
+        movie.overview,
         textAlign: TextAlign.justify,
         style: Theme.of(context).textTheme.subtitle1,
-
-        ),
-
+      ),
     );
   }
 }
