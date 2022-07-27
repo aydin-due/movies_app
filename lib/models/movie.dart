@@ -32,6 +32,7 @@ class Movie {
   bool video;
   double voteAverage;
   int voteCount;
+  String? heroID;
 
   get posterImage {
     if (this.posterPath != null)

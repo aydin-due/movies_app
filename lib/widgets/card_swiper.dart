@@ -9,12 +9,13 @@ class CardSwiper extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final size = MediaQuery.of(context).size; // widget q da info sobre el dispositivo en que corre
+    final size = MediaQuery.of(context)
+        .size; // widget q da info sobre el dispositivo en que corre
 
     if (this.movies.isEmpty) {
       return Container(
         width: double.infinity,
-        height: size.height*0.5,
+        height: size.height * 0.5,
         child: const Center(child: CircularProgressIndicator()),
       );
     }
@@ -29,19 +30,23 @@ class CardSwiper extends StatelessWidget {
           itemHeight: size.height * 0.4,
           itemBuilder: (_, int index) {
             final movie = movies[index];
-            print(movie.posterImage);
+            movie.heroID = 'swiper-${movie.id}';
 
             // builder dispara una funcion dinamicamente
             return GestureDetector(
               onTap: () => Navigator.pushNamed(context, 'details',
                   arguments: movie), //navega cuando se da click en card
-              child: ClipRRect(
-                // card builder
-                borderRadius: BorderRadius.circular(20),
-                child: FadeInImage(
-                  placeholder: const AssetImage('assets/no-image.jpg'),
-                  image: NetworkImage(movie.posterImage),
-                  fit: BoxFit.cover,
+              child: Hero(
+                // solo puede haber 1 hero animation con ese id
+                tag: movie.heroID!,
+                child: ClipRRect(
+                  // card builder
+                  borderRadius: BorderRadius.circular(20),
+                  child: FadeInImage(
+                    placeholder: const AssetImage('assets/no-image.jpg'),
+                    image: NetworkImage(movie.posterImage),
+                    fit: BoxFit.cover,
+                  ),
                 ),
               ),
             );

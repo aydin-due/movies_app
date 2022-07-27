@@ -54,7 +54,7 @@ class _MovieSliderState extends State<MovieSlider> {
               scrollDirection: Axis.horizontal,
               itemCount: widget.movies.length,
               itemBuilder: (_, int index) =>
-                  _MoviePoster(movie: widget.movies[index])),
+                  _MoviePoster(widget.movies[index], '${widget.title}-$index-${widget.movies[index].id}')),
         )
       ]),
     );
@@ -62,30 +62,34 @@ class _MovieSliderState extends State<MovieSlider> {
 }
 
 class _MoviePoster extends StatelessWidget {
-  const _MoviePoster({
-    Key? key,
-    required this.movie,
-  }) : super(key: key);
   final Movie movie;
+  final String heroID;
+
+  const _MoviePoster(this.movie, this.heroID);
 
   @override
   Widget build(BuildContext context) {
+    movie.heroID = heroID;
+
     return Container(
       width: 130,
       height: 190,
       margin: const EdgeInsets.symmetric(horizontal: 10),
       child: Column(children: [
         GestureDetector(
-          onTap: () => Navigator.pushNamed(context, 'details',
-              arguments: movie),
-          child: ClipRRect(
-            borderRadius: BorderRadius.circular(20),
-            child: FadeInImage(
-              placeholder: const AssetImage('assets/no-image.jpg'),
-              image: NetworkImage(movie.posterImage),
-              width: 130,
-              height: 190,
-              fit: BoxFit.cover,
+          onTap: () =>
+              Navigator.pushNamed(context, 'details', arguments: movie),
+          child: Hero(
+            tag: movie.heroID!,
+            child: ClipRRect(
+              borderRadius: BorderRadius.circular(20),
+              child: FadeInImage(
+                placeholder: const AssetImage('assets/no-image.jpg'),
+                image: NetworkImage(movie.posterImage),
+                width: 130,
+                height: 190,
+                fit: BoxFit.cover,
+              ),
             ),
           ),
         ),
@@ -94,7 +98,8 @@ class _MoviePoster extends StatelessWidget {
         ),
         Text(
           movie.title,
-          overflow: TextOverflow.ellipsis, // muestra 3 puntitos p/ indicar q hay + texto
+          overflow: TextOverflow
+              .ellipsis, // muestra 3 puntitos p/ indicar q hay + texto
           maxLines: 2, // num d lineas q hay
           textAlign: TextAlign.center,
         )
