@@ -31,9 +31,9 @@ class _MovieSliderState extends State<MovieSlider> {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
+    return SizedBox(
       width: double.infinity,
-      height: 260,
+      height: MediaQuery.of(context).size.height * 0.35,
       child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
         if (widget.title != null)
           Padding(
